@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>HORA DE LA FIESTAAAA! // Convocatoria del Más Allá</title>
+
+  <!-- Open Graph para previsualización en WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="HORA DE LA FIESTA! 🪦 Invocación de Halloween">
+  <meta property="og:description" content="3 de Noviembre, 8:00 PM. Banda en vivo + DJ. Ubicación: San Juan Xalpa, Iztapalapa. REGLA ESTRICTA: Sin disfraz no entras.">
+  <!-- Sube una imagen de 1200x630px menor a 300KB llamada 'preview.jpg' en la raíz -->
+  <meta property="og:image" content="preview.jpg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #0a0612;
+      --bj-green: #39ff14;
+      --bj-purple: #9d00ff;
+      --bj-purple-dark: #2c0b47;
+      --bj-orange: #ff5500;
+      --bj-white: #f7f7f7;
+      --bj-black: #111111;
+      --font-ghoul: 'Creepster', cursive;
+      --font-clean: 'Montserrat', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--bj-white);
+      font-family: var(--font-clean);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* Espiral de fondo */
+    #spiral-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      opacity: 0.28;
+      pointer-events: none;
+    }
+
+    /* Viñeteado de pantalla */
+    .vignette {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, transparent 35%, rgba(5, 2, 10, 0.95) 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* =========================================================================
+       FASE 1: LA INVOCACIÓN
+       ========================================================================= */
+    #gatekeeper {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      background: rgba(10, 6, 18, 0.94);
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    #gatekeeper.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .tombstone-frame {
+      border: 4px solid var(--bj-green);
+      box-shadow: 0 0 25px rgba(57, 255, 20, 0.4), inset 0 0 25px rgba(157, 0, 255, 0.3);
+      padding: 32px 20px;
+      max-width: 360px;
+      width: 100%;
+      background: rgba(18, 10, 30, 0.9);
+      border-radius: 12px;
+    }
+
+    .manual-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      color: var(--bj-orange);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .gate-title {
+      font-family: var(--font-ghoul);
+      font-size: 2.8rem;
+      letter-spacing: 2px;
+      color: var(--bj-green);
+      text-shadow: 3px 3px 0 var(--bj-purple);
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .gate-desc {
+      font-size: 0.9rem;
+      color: #b0a8c0;
+      margin-bottom: 28px;
+      line-height: 1.4;
+    }
+
+    .btn-invoke {
+      background: var(--bj-green);
+      color: var(--bj-black);
+      font-family: var(--font-ghoul);
+      font-size: 1.8rem;
+      letter-spacing: 3px;
+      border: none;
+      padding: 14px 28px;
+      cursor: pointer;
+      border-radius: 6px;
+      box-shadow: 0 0 20px var(--bj-green);
+      transition: transform 0.1s ease;
+      width: 100%;
+    }
+
+    .btn-invoke:active {
+      transform: scale(0.96);
+    }
+
+    .counter-dots {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid var(--bj-purple);
+      background: transparent;
+      transition: all 0.3s ease;
+    }
+
+    .dot.filled {
+      background: var(--bj-green);
+      border-color: var(--bj-green);
+      box-shadow: 0 0 12px var(--bj-green);
+    }
+
+    /* Flash Showtime */
+    #showtime-flash {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      background: var(--bj-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    #showtime-flash.active {
+      animation: flashAnim 1.4s ease-out forwards;
+    }
+
+    .flash-text {
+      font-family: var(--font-ghoul);
+      font-size: 4rem;
+      color: var(--bj-black);
+      text-align: center;
+      transform: rotate(-6deg);
+    }
+
+    @keyframes flashAnim {
+      0% { opacity: 1; visibility: visible; }
+      20% { background: var(--bj-purple); }
+      40% { background: var(--bj-orange); }
+      70% { opacity: 1; }
+      100% { opacity: 0; visibility: hidden; }
+    }
+
+    /* =========================================================================
+       FASE 2: EL BOLETO DEL INFRAMUNDO
+       ========================================================================= */
+    #ticket-wrapper {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      max-width: 410px;
+      padding: 20px 16px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+
+    #ticket-wrapper.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .ticket {
+      background: #fdfaf0;
+      color: #1a1a1a;
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(57, 255, 20, 0.2);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    /* Rayas Beetlejuice */
+    .stripes-header {
+      height: 22px;
+      background: repeating-linear-gradient(
+        -45deg,
+        #000,
+        #000 14px,
+        #fff 14px,
+        #fff 28px
+      );
+      border-bottom: 2px solid #000;
+    }
+
+    .ticket-body {
+      padding: 24px 20px;
+      text-align: center;
+    }
+
+    .ticket-number {
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      color: var(--bj-purple);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .ticket-main-title {
+      font-family: var(--font-ghoul);
+      font-size: 3.2rem;
+      line-height: 0.95;
+      color: var(--bj-purple-dark);
+      text-shadow: 2px 2px 0 var(--bj-green);
+      margin-bottom: 16px;
+    }
+
+    .ticket-info-block {
+      background: rgba(157, 0, 255, 0.08);
+      border: 1px dashed var(--bj-purple);
+      padding: 14px 10px;
+      margin-bottom: 14px;
+      border-radius: 4px;
+    }
+
+    .info-label {
+      font-size: 0.65rem;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      color: #555;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .info-val {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: #111;
+    }
+
+    .info-val.date {
+      font-size: 1.4rem;
+      color: var(--bj-purple-dark);
+    }
+
+    .lineup-highlight {
+      font-family: var(--font-ghoul);
+      font-size: 1.8rem;
+      color: var(--bj-orange);
+      letter-spacing: 1px;
+      line-height: 1.1;
+      margin-top: 4px;
+    }
+
+    .address-box {
+      background: #eee7d5;
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .address-text {
+      font-size: 0.85rem;
+      line-height: 1.35;
+      color: #222;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    /* Sello obligatorio */
+    .stamp-warning {
+      border: 3px solid #d00000;
+      color: #d00000;
+      padding: 10px 8px;
+      font-size: 0.95rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transform: rotate(-2deg);
+      margin: 16px 0;
+      background: rgba(208, 0, 0, 0.05);
+      border-radius: 2px;
+    }
+
+    /* Cuenta regresiva */
+    .countdown-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .count-card {
+      background: #1a1a1a;
+      color: var(--bj-green);
+      padding: 8px 4px;
+      border-radius: 4px;
+    }
+
+    .count-num {
+      font-size: 1.25rem;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .count-lbl {
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      color: #888;
+      text-transform: uppercase;
+    }
+
+    /* Botones de acción */
+    .actions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-action {
+      display: block;
+      text-decoration: none;
+      font-weight: 900;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 14px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+      text-align: center;
+    }
+
+    .btn-action:active {
+      transform: scale(0.97);
+    }
+
+    .btn-maps {
+      background: var(--bj-purple);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(157, 0, 255, 0.35);
+    }
+
+    .btn-whatsapp {
+      background: #25d366;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.35);
+    }
+
+    .btn-cal {
+      background: transparent;
+      border: 2px solid #333;
+      color: #333;
+    }
+
+    /* Vibraciones sísmicas */
+    .shake-1 { animation: shakeAnim 0.3s cubic-bezier(.36,.07,.19,.97) both; }
+    .shake-2 { animation: shakeAnim 0.4s cubic-bezier(.36,.07,.19,.97) both; transform: scale(1.02); }
+    .shake-3 { animation: shakeAnim 0.6s cubic-bezier(.36,.07,.19,.97) both; }
+
+    @keyframes shakeAnim {
+      10%, 90% { transform: translate3d(-3px, 0, 0); }
+      20%, 80% { transform: translate3d(4px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+      40%, 60% { transform: translate3d(6px, 0, 0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Espiral animada -->
+  <canvas id="spiral-canvas"></canvas>
+  <div class="vignette"></div>
+
+  <!-- FASE 1: INVOCACIÓN (3 TOQUES OBLIGATORIOS) -->
+  <div id="gatekeeper">
+    <div class="tombstone-frame" id="tombstone">
+      <div class="manual-tag">Manual para los recién fallecidos</div>
+      <h1 class="gate-title">INVÓCALO</h1>
+      <p class="gate-desc">
+        Toca el botón tres veces consecutivas para romper el sello del inframundo.
+      </p>
+
+      <button class="btn-invoke" id="btn-invoke">BEETLE...</button>
+
+      <div class="counter-dots">
+        <div class="dot" id="dot-1"></div>
+        <div class="dot" id="dot-2"></div>
+        <div class="dot" id="dot-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLASH SHOWTIME -->
+  <div id="showtime-flash">
+    <div class="flash-text">¡HORA DE LA FIESTAA!</div>
+  </div>
+
+  <!-- FASE 2: BOLETO DEL EVENTO -->
+  <div id="ticket-wrapper">
+    <div class="ticket">
+      <div class="stripes-header"></div>
+
+      <div class="ticket-body">
+        <div class="ticket-number">Boleto Nº 9,999,999 // Turno Oficial</div>
+        <h2 class="ticket-main-title">HALLOWEEN PARTY</h2>
+
+        <div class="ticket-info-block">
+          <div class="info-label">Fecha y Hora de Acceso</div>
+          <div class="info-val date">3 de Noviembre // 8:00 PM</div>
+        </div>
+
+        <div class="ticket-info-block">
+          <div class="info-label">Alineación Sonora</div>
+          <div class="lineup-highlight">BANDA EN VIVO + DJ</div>
+        </div>
+
+        <div class="address-box">
+          <div class="info-label">Coordenadas del Encuentro</div>
+          <div class="address-text">
+            Calle 6, Manzana F, Lote 7<br>
+            Colonia San Juan Xalpa, C.P. 09850<br>
+            Iztapalapa, Ciudad de México
+          </div>
+        </div>
+
+        <div class="stamp-warning">
+          ⚠️ REGLA ESTRICTA: QUIEN NO TRAIGA DISFRAZ NO ENTRA
+        </div>
+
+        <!-- Cuenta Regresiva -->
+        <div class="countdown-container">
+          <div class="count-card">
+            <div class="count-num" id="d-days">--</div>
+            <div class="count-lbl">Días</div>
+          </div>
+          <div class="count-card">
+            <div class="count-num" id="d-hours">--</div>
+            <div class="count-lbl">Horas</div>
+          </div>
+          <div class="count-card">
+            <div class="count-num" id="d-mins">--</div>
+            <div class="count-lbl">Min</div>
+          </div>
+        </div>
+
+        <!-- Acciones -->
+        <div class="actions-list">
+          <a id="btn-maps" class="btn-action btn-maps" target="_blank">
+            📍 Abrir en Google Maps
+          </a>
+          <a id="btn-wa" class="btn-action btn-whatsapp" target="_blank">
+            💬 Confirmar por WhatsApp
+          </a>
+          <a id="btn-cal" class="btn-action btn-cal" target="_blank">
+            📅 Guardar en Calendario
+          </a>
+        </div>
+      </div>
+
+      <div class="stripes-header"></div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================================
+       CONFIGURACIÓN DE DATOS
+       ========================================================================= */
+    // Edita este número cuando lo tengas (con código de país, ej. 52155XXXXXXXX)
+    const WHATSAPP_PHONE = "5215500000000"; 
+    
+    const FULL_ADDRESS = "C. 6 19, San Juan Xalpa";
+    const MAPS_URL = `https://maps.app.goo.gl/2Uo5QsJtMSJubPPQ9`;
+    
+    // Configuración para Google Calendar (3 de Noviembre, 20:00 a 04:00)
+    const CAL_TITLE = "Halloween Party: Beetlejuice Edition";
+    const CAL_DESC = "Banda en vivo + DJ set. NOTA ESTRICTA: Quien no traiga disfraz NO entra.";
+    const CAL_DATES = "20261103T200000/20261104T040000";
+    const CAL_URL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(CAL_TITLE)}&dates=${CAL_DATES}&details=${encodeURIComponent(CAL_DESC)}&location=${encodeURIComponent(FULL_ADDRESS)}`;
+
+    document.getElementById('btn-maps').href = MAPS_URL;
+    document.getElementById('btn-cal').href = CAL_URL;
+
+    const waMsg = encodeURIComponent("¡Ya invoqué el boleto para la Halloween Party! Confirmo mi asistencia para el 3 de Noviembre (y voy con disfraz).");
+    document.getElementById('btn-wa').href = `https://wa.me/${WHATSAPP_PHONE}?text=${waMsg}`;
+
+    /* =========================================================================
+       CANVAS: ESPIRAL BEETLEJUICE
+       ========================================================================= */
+    const canvas = document.getElementById('spiral-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, centerX, centerY;
+    let angleOffset = 0;
+
+    function resizeCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      centerX = width / 2;
+      centerY = height / 2;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function drawSpiral() {
+      ctx.fillStyle = '#0a0612';
+      ctx.fillRect(0, 0, width, height);
+
+      const maxRadius = Math.hypot(centerX, centerY) * 1.2;
+      const arms = 4;
+      const step = 0.05;
+
+      ctx.save();
+      ctx.translate(centerX, centerY);
+
+      for (let arm = 0; arm < arms; arm++) {
+        const baseAngle = (arm * (Math.PI * 2 / arms)) + angleOffset;
+        ctx.beginPath();
+        for (let r = 5; r < maxRadius; r += 4) {
+          const theta = baseAngle + (r * 0.015);
+          const x = r * Math.cos(theta);
+          const y = r * Math.sin(theta);
+          if (r === 5) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = (arm % 2 === 0) ? '#f5f5f5' : '#140c24';
+        ctx.lineWidth = 26;
+        ctx.stroke();
+      }
+
+      ctx.restore();
+      angleOffset += 0.007; // Velocidad de rotación
+      requestAnimationFrame(drawSpiral);
+    }
+    requestAnimationFrame(drawSpiral);
+
+    /* =========================================================================
+       AUDIO PROCEDURAL (Web Audio API)
+       ========================================================================= */
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    // Acordes menores disonantes de órgano de vodevil
+    function playOrganChord(step) {
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+      const chordSets = [
+        [220, 261.63, 311.13], // La menor disminuido (Toque 1)
+        [293.66, 349.23, 415.30], // Re menor alterado (Toque 2)
+        [440, 523.25, 622.25, 880] // Agudo final estruendoso (Toque 3)
+      ];
+
+      const frequencies = chordSets[step - 1];
+      frequencies.forEach(f => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(f, now);
+
+        // Envolvente de volumen
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.18 / frequencies.length, now + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + (step === 3 ? 2.5 : 0.8));
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(now);
+        osc.stop(now + (step === 3 ? 2.5 : 0.8));
+      });
+    }
+
+    /* =========================================================================
+       MECÁNICA DE INVOCACIÓN (3 TOQUES)
+       ========================================================================= */
+    let invocationStep = 0;
+    const btnInvoke = document.getElementById('btn-invoke');
+    const tombstone = document.getElementById('tombstone');
+    const gatekeeper = document.getElementById('gatekeeper');
+    const showtimeFlash = document.getElementById('showtime-flash');
+    const ticketWrapper = document.getElementById('ticket-wrapper');
+
+    const buttonTexts = [
+      "BEETLE...",
+      "BEETLEJUICE...",
+      "¡BEETLEJUICE!"
+    ];
+
+    btnInvoke.addEventListener('click', () => {
+      initAudio();
+      invocationStep++;
+
+      playOrganChord(invocationStep);
+
+      // Actualizar puntos de progreso
+      document.getElementById(`dot-${invocationStep}`).classList.add('filled');
+
+      // Sacudidas
+      tombstone.classList.remove('shake-1', 'shake-2');
+      void tombstone.offsetWidth; // Reflow
+
+      if (invocationStep === 1) {
+        tombstone.classList.add('shake-1');
+        btnInvoke.textContent = buttonTexts[1];
+      } else if (invocationStep === 2) {
+        tombstone.classList.add('shake-2');
+        btnInvoke.textContent = buttonTexts[2];
+      } else if (invocationStep === 3) {
+        // Invocación completa
+        btnInvoke.disabled = true;
+        document.body.classList.add('shake-3');
+
+        // Secuencia Flash
+        showtimeFlash.classList.add('active');
+
+        setTimeout(() => {
+          gatekeeper.classList.add('hidden');
+        }, 400);
+
+        setTimeout(() => {
+          ticketWrapper.classList.add('visible');
+          document.body.classList.remove('shake-3');
+        }, 1200);
+      }
+    });
+
+    /* =========================================================================
+       CUENTA REGRESIVA
+       ========================================================================= */
+    function updateCountdown() {
+      // 3 de Noviembre, 20:00 hrs
+      const target = new Date("November 3, 2026 20:00:00").getTime();
+      const now = new Date().getTime();
+      const diff = target - now;
+
+      if (diff <= 0) {
+        document.getElementById('d-days').textContent = "00";
+        document.getElementById('d-hours').textContent = "00";
+        document.getElementById('d-mins').textContent = "00";
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+      document.getElementById('d-days').textContent = String(days).padStart(2, '0');
+      document.getElementById('d-hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('d-mins').textContent = String(mins).padStart(2, '0');
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+</body>
+</html>
