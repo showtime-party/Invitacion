@@ -430,12 +430,12 @@
   <div id="gatekeeper">
     <div class="tombstone-frame" id="tombstone">
       <div class="manual-tag">Manual para los recién fallecidos</div>
-      <h1 class="gate-title">INVÓCALO</h1>
+      <h1 class="gate-title">INVÓCALOS</h1>
       <p class="gate-desc">
         Toca el botón tres veces consecutivas para romper el sello del inframundo.
       </p>
 
-      <button class="btn-invoke" id="btn-invoke">BEETLE...</button>
+      <button class="btn-invoke" id="btn-invoke">TACOS...</button>
 
       <div class="counter-dots">
         <div class="dot" id="dot-1"></div>
@@ -521,13 +521,13 @@
        CONFIGURACIÓN DE DATOS
        ========================================================================= */
     // Edita este número cuando lo tengas (con código de país, ej. 52155XXXXXXXX)
-    const WHATSAPP_PHONE = "5215500000000"; 
+    const WHATSAPP_PHONE = "525548514085"; 
     
-    const FULL_ADDRESS = "C. 6 19, San Juan Xalpa";
-    const MAPS_URL = `https://maps.app.goo.gl/2Uo5QsJtMSJubPPQ9`;
+    const FULL_ADDRESS = "Calle 6, Manzana F, Lote 7, Colonia San Juan Xalpa, Iztapalapa, 09850 CDMX, México";
+    const MAPS_URL = `https://maps.app.goo.gl/g9YiFG69dvNTbaBv6?g_st=aw`;
     
     // Configuración para Google Calendar (3 de Noviembre, 20:00 a 04:00)
-    const CAL_TITLE = "Halloween Party: Beetlejuice Edition";
+    const CAL_TITLE = "Halloween Party: Tacos Edition";
     const CAL_DESC = "Banda en vivo + DJ set. NOTA ESTRICTA: Quien no traiga disfraz NO entra.";
     const CAL_DATES = "20261103T200000/20261104T040000";
     const CAL_URL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(CAL_TITLE)}&dates=${CAL_DATES}&details=${encodeURIComponent(CAL_DESC)}&location=${encodeURIComponent(FULL_ADDRESS)}`;
@@ -539,7 +539,7 @@
     document.getElementById('btn-wa').href = `https://wa.me/${WHATSAPP_PHONE}?text=${waMsg}`;
 
     /* =========================================================================
-       CANVAS: ESPIRAL BEETLEJUICE
+       CANVAS: ESPIRAL TACOS
        ========================================================================= */
     const canvas = document.getElementById('spiral-canvas');
     const ctx = canvas.getContext('2d');
@@ -643,9 +643,9 @@
     const ticketWrapper = document.getElementById('ticket-wrapper');
 
     const buttonTexts = [
-      "BEETLE...",
-      "BEETLEJUICE...",
-      "¡BEETLEJUICE!"
+      "TACOS...",
+      "TACOS... Y MÁS TACOS...",
+      "TACOS... Y MÁS TACOS... ¡YAAAA!"
     ];
 
     btnInvoke.addEventListener('click', () => {
